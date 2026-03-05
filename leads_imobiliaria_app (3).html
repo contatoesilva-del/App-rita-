@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#1a73e8"/>
+<title>Leads Rita</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  /* Material You — Blue seed */
+  --md-primary:       #1a73e8;
+  --md-primary-dark:  #1557b0;
+  --md-on-primary:    #ffffff;
+  --md-secondary:     #4285f4;
+  --md-surface:       #ffffff;
+  --md-surface-var:   #f8f9ff;
+  --md-bg:            #f0f4ff;
+  --md-outline:       #dae2f9;
+  --md-outline-var:   #eef1fc;
+
+  --md-green:    #1e8e3e;
+  --md-green-bg: #e6f4ea;
+  --md-red:      #d93025;
+  --md-red-bg:   #fce8e6;
+  --md-amber:    #e37400;
+  --md-amber-bg: #fef7e0;
+  --md-purple:   #7b1fa2;
+  --md-purple-bg:#f3e5f5;
+  --md-teal:     #007b83;
+  --md-teal-bg:  #e0f5f5;
+
+  --md-text:     #1f2937;
+  --md-text2:    #5f6368;
+  --md-text3:    #9aa0a6;
+
+  --r-xl:  28px;
+  --r-lg:  20px;
+  --r-md:  16px;
+  --r-sm:  12px;
+  --r-xs:  8px;
+
+  --font:  'Google Sans', 'Roboto', sans-serif;
+  --mono:  'Roboto Mono', monospace;
+  --elev1: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --elev2: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --elev3: 0 8px 24px rgba(0,0,0,.1),  0 4px 8px rgba(0,0,0,.05);
+}
+
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; background:var(--md-bg); color:var(--md-text); font-family:var(--font); overflow:hidden; -webkit-font-smoothing:antialiased; }
+
+/* ── SHELL ── */
+#app { display:flex; flex-direction:column; height:100dvh; max-width:430px; margin:0 auto; background:var(--md-bg); overflow:hidden; }
+
+/* ── TOP APP BAR (Material 3) ── */
+.topbar {
+  background:var(--md-primary);
+  padding:44px 8px 0;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+}
+.topbar::after {
+  content:'';
+  position:absolute;
+  bottom:-30px; right:-40px;
+  width:160px; height:160px;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  pointer-events:none;
+}
+.topbar-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px 14px;
+}
+.topbar-left { display:flex; align-items:center; gap:12px; }
+.topbar-avatar {
+  width:40px; height:40px;
+  background:rgba(255,255,255,.18);
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.topbar-title { font-size:18px; font-weight:700; color:#fff; letter-spacing:-.2px; line-height:1.2; }
+.topbar-sub   { font-size:12px; color:rgba(255,255,255,.72); font-weight:400; margin-top:1px; }
+.topbar-actions { display:flex; gap:4px; }
+.icon-btn {
+  width:40px; height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  border:none;
+  display:grid; place-items:center;
+  font-size:18px;
+  cursor:pointer;
+  transition:background .2s;
+  color:#fff;
+}
+.icon-btn:active { background:rgba(255,255,255,.24); transform:scale(.93); }
+
+/* ── NAV BAR (Material 3 bottom nav) ── */
+.navbar {
+  background:var(--md-surface);
+  display:flex;
+  border-top:1px solid var(--md-outline);
+  flex-shrink:0;
+  padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -1px 0 var(--md-outline);
+}
+.nav-item {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:12px 0 10px;
+  cursor:pointer;
+  position:relative;
+  gap:4px;
+  transition:all .2s;
+}
+.nav-indicator {
+  position:absolute;
+  top:6px;
+  width:64px; height:32px;
+  border-radius:16px;
+  background:transparent;
+  transition:background .2s;
+}
+.nav-item.active .nav-indicator { background:#d3e3fd; }
+.nav-icon { font-size:22px; position:relative; z-index:1; }
+.nav-label { font-size:12px; font-weight:500; color:var(--md-text2); transition:color .2s; }
+.nav-item.active .nav-label { color:var(--md-primary); font-weight:700; }
+.nav-badge {
+  position:absolute; top:4px; right:calc(50% - 22px);
+  background:var(--md-primary); color:#fff;
+  font-size:10px; font-weight:700;
+  border-radius:10px; padding:1px 6px;
+  font-family:var(--mono);
+  min-width:18px; text-align:center;
+  z-index:2;
+}
+
+/* ── SCREENS ── */
+.screen { flex:1; overflow-y:auto; overflow-x:hidden; display:none; }
+.screen.active { display:block; }
+.screen::-webkit-scrollbar { display:none; }
+.screen-pad { padding:16px 16px 100px; display:flex; flex-direction:column; gap:12px; }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-size:11px; font-weight:700;
+  letter-spacing:1.4px;
+  color:var(--md-primary);
+  text-transform:uppercase;
+  padding:4px 0 2px;
+}
+
+/* ── KPI CARDS ── */
+.kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.kpi-card {
+  background:var(--md-surface);
+  border-radius:var(--r-lg);
+  padding:18px 16px 16px;
+  box-shadow:var(--elev1);
+  position:relative;
+  overflow:hidden;
+  transition:transform .15s, box-shadow .15s;
+}
+.kpi-card:active { transform:scale(.96); box-shadow:none; }
+.kpi-card-bg {
+  position:absolute; top:-16px; right:-16px;
+  width:72px; height:72px; border-radius:50%;
+  opacity:.12;
+}
+.kpi-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:3px 8px; border-radius:20px;
+  font-size:11px; font-weight:600;
+  margin-bottom:10px;
+}
+.kpi-num {
+  font-size:36px; font-weight:700;
+  font-family:var(--mono);
+  line-height:1;
+  letter-spacing:-1px;
+}
+.kpi-desc { font-size:12px; color:var(--md-text2); margin-top:4px; font-weight:500; }
+
+/* Colors per card */
+.kpi-blue  .kpi-card-bg { background:var(--md-primary); }
+.kpi-blue  .kpi-chip    { background:#d3e3fd; color:var(--md-primary); }
+.kpi-blue  .kpi-num     { color:var(--md-primary); }
+
+.kpi-green .kpi-card-bg { background:var(--md-green); }
+.kpi-green .kpi-chip    { background:var(--md-green-bg); color:var(--md-green); }
+.kpi-green .kpi-num     { color:var(--md-green); }
+
+.kpi-red   .kpi-card-bg { background:var(--md-red); }
+.kpi-red   .kpi-chip    { background:var(--md-red-bg); color:var(--md-red); }
+.kpi-red   .kpi-num     { color:var(--md-red); }
+
+.kpi-amber .kpi-card-bg { background:var(--md-amber); }
+.kpi-amber .kpi-chip    { background:var(--md-amber-bg); color:var(--md-amber); }
+.kpi-amber .kpi-num     { color:var(--md-amber); }
+
+.kpi-purple .kpi-card-bg { background:var(--md-purple); }
+.kpi-purple .kpi-chip    { background:var(--md-purple-bg); color:var(--md-purple); }
+.kpi-purple .kpi-num     { color:var(--md-purple); }
+
+.kpi-teal  .kpi-card-bg { background:var(--md-teal); }
+.kpi-teal  .kpi-chip    { background:var(--md-teal-bg); color:var(--md-teal); }
+.kpi-teal  .kpi-num     { color:var(--md-teal); }
+
+/* ── SURFACE CARD ── */
+.surface-card {
+  background:var(--md-surface);
+  border-radius:var(--r-lg);
+  box-shadow:var(--elev1);
+  overflow:hidden;
+}
+.card-header {
+  padding:16px 16px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--md-outline-var);
+}
+.card-title { font-size:13px; font-weight:700; color:var(--md-text); letter-spacing:.2px; }
+.card-action { font-size:12px; color:var(--md-primary); font-weight:600; cursor:pointer; padding:4px 8px; border-radius:20px; background:#eef4ff; }
+.period-btns { display:flex; gap:4px; }
+.period-btn {
+  padding:5px 10px; border-radius:20px;
+  font-size:12px; font-weight:600; font-family:var(--font);
+  border:1.5px solid var(--md-outline);
+  background:transparent; color:var(--md-text2);
+  cursor:pointer; transition:all .18s;
+}
+.period-btn.active {
+  background:#d3e3fd; border-color:var(--md-primary);
+  color:var(--md-primary);
+}
+.card-body { padding:16px; }
+
+/* ── CHARTS ── */
+canvas { max-height:210px !important; }
+.chart-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.legend-item  { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--md-text2); }
+.legend-dot   { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── RECENT LIST ── */
+.recent-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid var(--md-outline-var);
+  cursor:pointer;
+  transition:background .15s;
+}
+.recent-row:last-child { border-bottom:none; }
+.recent-row:active { background:var(--md-bg); margin:0 -16px; padding:12px 16px; border-radius:var(--r-sm); }
+.recent-name  { font-size:14px; font-weight:600; color:var(--md-text); }
+.recent-date  { font-size:12px; color:var(--md-text3); margin-top:2px; }
+
+/* ── STATUS CHIPS ── */
+.chip {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:4px 12px; border-radius:20px;
+  font-size:11px; font-weight:700;
+  white-space:nowrap; flex-shrink:0;
+}
+.chip.ativo   { background:var(--md-green-bg);  color:var(--md-green); }
+.chip.perdido { background:var(--md-red-bg);    color:var(--md-red); }
+.chip.fechado { background:var(--md-amber-bg);  color:var(--md-amber); }
+.chip.sem     { background:var(--md-outline-var); color:var(--md-text3); }
+
+/* ── SEARCH BAR ── */
+.searchbar-wrap {
+  padding:12px 16px 4px;
+  position:sticky; top:0; z-index:10;
+  background:var(--md-bg);
+}
+.searchbar {
+  display:flex; align-items:center; gap:10px;
+  background:var(--md-surface);
+  border-radius:28px;
+  padding:10px 16px;
+  box-shadow:var(--elev1);
+}
+.searchbar-icon { font-size:18px; color:var(--md-text3); flex-shrink:0; }
+.searchbar input {
+  flex:1; border:none; outline:none;
+  font-size:15px; font-family:var(--font);
+  color:var(--md-text); background:transparent;
+}
+.searchbar input::placeholder { color:var(--md-text3); }
+
+/* ── FILTER CHIPS ── */
+.chips-row {
+  display:flex; gap:8px;
+  padding:10px 16px 8px;
+  overflow-x:auto;
+}
+.chips-row::-webkit-scrollbar { display:none; }
+.filter-chip {
+  padding:6px 16px; border-radius:20px;
+  font-size:13px; font-weight:500;
+  border:1.5px solid var(--md-outline);
+  color:var(--md-text2);
+  background:var(--md-surface);
+  cursor:pointer; white-space:nowrap;
+  transition:all .2s;
+  flex-shrink:0;
+}
+.filter-chip.active {
+  background:#d3e3fd;
+  border-color:var(--md-primary);
+  color:var(--md-primary);
+  font-weight:700;
+}
+
+/* ── LEAD CARDS ── */
+.leads-list { padding:0 16px; display:flex; flex-direction:column; gap:10px; padding-bottom:100px; }
+.lead-card {
+  background:var(--md-surface);
+  border-radius:var(--r-lg);
+  padding:16px;
+  cursor:pointer;
+  box-shadow:var(--elev1);
+  transition:all .15s;
+  position:relative;
+  overflow:hidden;
+}
+.lead-card:active { transform:scale(.98); box-shadow:none; }
+.lead-card-bar {
+  position:absolute; left:0; top:0; bottom:0;
+  width:4px; border-radius:4px 0 0 4px;
+}
+.lead-card.ativo   .lead-card-bar { background:var(--md-green); }
+.lead-card.perdido .lead-card-bar { background:var(--md-red); }
+.lead-card.fechado .lead-card-bar { background:var(--md-amber); }
+.lead-card.sem-status .lead-card-bar { background:var(--md-outline); }
+.lead-card-inner { padding-left:12px; }
+.lead-top  { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px; }
+.lead-name { font-size:15px; font-weight:700; line-height:1.2; color:var(--md-text); }
+.lead-date { font-size:11px; color:var(--md-text3); font-family:var(--mono); margin-top:2px; }
+.lead-contacts { display:flex; gap:12px; flex-wrap:wrap; }
+.lead-contact-item { font-size:12px; color:var(--md-text2); display:flex; align-items:center; gap:3px; }
+.lead-contact-item b { color:var(--md-text); font-weight:600; }
+.motivo-chip {
+  margin-top:8px; display:inline-flex; align-items:center; gap:4px;
+  background:var(--md-red-bg); color:var(--md-red);
+  padding:3px 10px; border-radius:20px;
+  font-size:11px; font-weight:600;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align:center; padding:64px 32px; }
+.empty-icon  { font-size:52px; margin-bottom:16px; }
+.empty-title { font-size:17px; font-weight:700; color:var(--md-text); margin-bottom:6px; }
+.empty-sub   { font-size:14px; color:var(--md-text2); }
+
+/* ── FAB (Extended) ── */
+.fab {
+  position:fixed;
+  bottom:80px; left:50%; transform:translateX(-50%);
+  width:calc(100% - 32px); max-width:398px;
+  background:var(--md-primary);
+  color:#fff;
+  border:none; border-radius:var(--r-lg);
+  padding:16px 24px;
+  font-size:15px; font-weight:700; font-family:var(--font);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  box-shadow:0 4px 16px rgba(26,115,232,.4), 0 2px 6px rgba(26,115,232,.3);
+  transition:all .2s;
+  z-index:100;
+  letter-spacing:.2px;
+}
+.fab:active { transform:translateX(-50%) scale(.97); box-shadow:none; }
+.fab.hidden { display:none; }
+
+/* ── BOTTOM SHEET MODAL ── */
+.overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(3px);
+  z-index:200; display:none;
+  align-items:flex-end; justify-content:center;
+}
+.overlay.open { display:flex; }
+.sheet {
+  background:var(--md-surface);
+  border-radius:28px 28px 0 0;
+  width:100%; max-width:430px;
+  max-height:94dvh;
+  overflow-y:auto;
+  padding:0 0 40px;
+  animation:sheetUp .28s cubic-bezier(.32,1,.4,1);
+}
+.sheet::-webkit-scrollbar { display:none; }
+@keyframes sheetUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.sheet-handle { width:32px; height:4px; background:var(--md-outline); border-radius:2px; margin:10px auto 0; }
+.sheet-header {
+  padding:16px 20px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--md-outline-var);
+}
+.sheet-title { font-size:18px; font-weight:700; color:var(--md-text); }
+.sheet-close {
+  width:32px; height:32px;
+  background:var(--md-bg); border-radius:50%;
+  display:grid; place-items:center;
+  font-size:16px; cursor:pointer; border:none; color:var(--md-text2);
+  transition:background .2s;
+}
+.sheet-close:active { background:var(--md-outline); }
+.sheet-body { padding:20px; display:flex; flex-direction:column; gap:16px; }
+
+/* ── FORM FIELDS ── */
+.field { display:flex; flex-direction:column; gap:6px; }
+.field-lbl { font-size:12px; font-weight:700; color:var(--md-text2); letter-spacing:.6px; text-transform:uppercase; }
+.field-input {
+  background:var(--md-bg);
+  border:1.5px solid var(--md-outline);
+  border-radius:var(--r-md);
+  padding:14px 16px;
+  color:var(--md-text);
+  font-size:15px; font-family:var(--font);
+  outline:none; width:100%;
+  transition:border-color .2s, box-shadow .2s;
+  -webkit-appearance:none;
+}
+.field-input:focus { border-color:var(--md-primary); box-shadow:0 0 0 3px rgba(26,115,232,.12); }
+.field-input::placeholder { color:var(--md-text3); }
+
+/* ── STATUS SELECTOR ── */
+.status-row { display:flex; gap:8px; }
+.status-opt { flex:1; }
+.status-opt input { display:none; }
+.status-opt label {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:12px 8px;
+  border-radius:var(--r-md);
+  border:1.5px solid var(--md-outline);
+  font-size:12px; font-weight:600;
+  color:var(--md-text2);
+  cursor:pointer;
+  transition:all .18s;
+}
+.status-opt label .s-icon { font-size:20px; }
+.status-opt input:checked + label.l-ativo   { background:var(--md-green-bg);  border-color:var(--md-green);  color:var(--md-green); }
+.status-opt input:checked + label.l-perdido { background:var(--md-red-bg);    border-color:var(--md-red);    color:var(--md-red); }
+.status-opt input:checked + label.l-fechado { background:var(--md-amber-bg);  border-color:var(--md-amber);  color:var(--md-amber); }
+
+/* ── MOTIVO OPTIONS ── */
+.motivo-list { display:flex; flex-direction:column; gap:8px; }
+.motivo-item {
+  display:flex; align-items:center; gap:12px;
+  background:var(--md-bg);
+  border:1.5px solid var(--md-outline);
+  border-radius:var(--r-md);
+  padding:13px 14px;
+  cursor:pointer; transition:all .18s;
+}
+.motivo-item.selected { border-color:var(--md-red); background:var(--md-red-bg); }
+.motivo-radio {
+  width:20px; height:20px; border-radius:50%;
+  border:2px solid var(--md-outline);
+  display:grid; place-items:center;
+  flex-shrink:0; transition:all .18s;
+}
+.motivo-item.selected .motivo-radio { background:var(--md-red); border-color:var(--md-red); }
+.motivo-radio::after { content:''; width:8px; height:8px; background:#fff; border-radius:50%; display:none; }
+.motivo-item.selected .motivo-radio::after { display:block; }
+.motivo-lbl { font-size:14px; font-weight:500; color:var(--md-text); }
+.motivo-section { display:none; flex-direction:column; gap:6px; }
+.motivo-section.visible { display:flex; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  background:var(--md-primary); color:#fff;
+  border:none; border-radius:var(--r-lg);
+  padding:16px; font-size:15px; font-weight:700; font-family:var(--font);
+  cursor:pointer; width:100%;
+  box-shadow:0 2px 8px rgba(26,115,232,.3);
+  transition:all .2s; letter-spacing:.2px;
+}
+.btn-primary:active { transform:scale(.98); box-shadow:none; }
+.btn-danger {
+  background:var(--md-red-bg); color:var(--md-red);
+  border:1.5px solid rgba(217,48,37,.2);
+  border-radius:var(--r-lg);
+  padding:14px; font-size:14px; font-weight:700; font-family:var(--font);
+  cursor:pointer; width:100%; transition:all .2s;
+}
+
+/* ── CONFIRM DIALOG ── */
+.dialog-overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+  z-index:400; display:none;
+  align-items:center; justify-content:center; padding:24px;
+}
+.dialog-overlay.open { display:flex; }
+.dialog {
+  background:var(--md-surface);
+  border-radius:28px; padding:28px 24px;
+  width:100%; max-width:340px;
+  box-shadow:var(--elev3);
+}
+.dialog h3 { font-size:20px; font-weight:700; margin-bottom:8px; }
+.dialog p  { font-size:14px; color:var(--md-text2); margin-bottom:24px; line-height:1.5; }
+.dialog-btns { display:flex; gap:10px; }
+.btn-outline { flex:1; background:transparent; border:1.5px solid var(--md-outline); border-radius:var(--r-md); padding:13px; font-size:14px; font-weight:600; font-family:var(--font); color:var(--md-text); cursor:pointer; }
+.btn-del { flex:1; background:var(--md-red); border:none; border-radius:var(--r-md); padding:13px; font-size:14px; font-weight:700; font-family:var(--font); color:#fff; cursor:pointer; }
+
+/* ── SNACKBAR (Material toast) ── */
+.snackbar {
+  position:fixed; bottom:96px; left:50%; transform:translateX(-50%);
+  background:#323232; color:#fff;
+  border-radius:var(--r-sm);
+  padding:12px 20px;
+  font-size:13px; font-weight:500;
+  z-index:500;
+  white-space:nowrap;
+  opacity:0; transition:opacity .25s;
+  pointer-events:none;
+  box-shadow:var(--elev2);
+  max-width:calc(100% - 32px);
+}
+.snackbar.show { opacity:1; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TOP APP BAR -->
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="topbar-left">
+        <div class="topbar-avatar">🏠</div>
+        <div>
+          <div class="topbar-title">Leads Rita</div>
+          <div class="topbar-sub">Imobiliária</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="exportCSV()" title="Exportar CSV">📤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SCREEN -->
+  <div class="screen active" id="screen-dashboard">
+    <div class="screen-pad">
+
+      <div class="section-label">Resumo geral</div>
+      <div class="kpi-row">
+        <div class="kpi-card kpi-blue">
+          <div class="kpi-card-bg"></div>
+          <div class="kpi-chip">📋 Total</div>
+          <div class="kpi-num" id="kpi-total">0</div>
+          <div class="kpi-desc">leads recebidos</div>
+        </div>
+        <div class="kpi-card kpi-green">
+          <div class="kpi-card-bg"></div>
+          <div class="kpi-chip">✅ Ativos</div>
+          <div class="kpi-num" id="kpi-ativos">0</div>
+          <div class="kpi-desc">em andamento</div>
+        </div>
+        <div class="kpi-card kpi-red">
+          <div class="kpi-card-bg"></div>
+          <div class="kpi-chip">❌ Perdidos</div>
+          <div class="kpi-num" id="kpi-perdidos">0</div>
+          <div class="kpi-desc">não convertidos</div>
+        </div>
+        <div class="kpi-card kpi-amber">
+          <div class="kpi-card-bg"></div>
+          <div class="kpi-chip">🤝 Fechados</div>
+          <div class="kpi-num" id="kpi-fechados">0</div>
+          <div class="kpi-desc">negócios fechados</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:4px">Taxas de conversão</div>
+      <div class="kpi-row">
+        <div class="kpi-card kpi-purple">
+          <div class="kpi-card-bg"></div>
+          <div class="kpi-chip">📉 Perda</div>
+          <div class="kpi-num" id="kpi-taxa-perda">0%</div>
+          <div class="kpi-desc">dos leads perdidos</div>
+        </div>
+        <div class="kpi-card kpi-teal">
+          <div class="kpi-card-bg"></div>
+          <div class="kpi-chip">🏆 Fechamento</div>
+          <div class="kpi-num" id="kpi-taxa-fechamento">0%</div>
+          <div class="kpi-desc">taxa de conversão</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:4px">Leads por mês</div>
+      <div class="surface-card">
+        <div class="card-header">
+          <div class="card-title">Entradas mensais</div>
+          <div class="period-btns">
+            <button class="period-btn" onclick="setPeriod(3,this)">3M</button>
+            <button class="period-btn" onclick="setPeriod(6,this)">6M</button>
+            <button class="period-btn active" onclick="setPeriod(12,this)">12M</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <canvas id="barChart"></canvas>
+          <div id="barEmpty" style="display:none;text-align:center;padding:28px 0;color:var(--md-text3);font-size:13px">Nenhum lead com data de chegada ainda</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:4px">Motivos de perda</div>
+      <div class="surface-card">
+        <div class="card-body">
+          <canvas id="pieChart"></canvas>
+          <div id="chartLegend" class="chart-legend"></div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:4px">Últimos leads</div>
+      <div class="surface-card">
+        <div class="card-header">
+          <div class="card-title">Recentes</div>
+          <div class="card-action" onclick="switchToLeads()">Ver todos</div>
+        </div>
+        <div class="card-body" style="padding-top:0;padding-bottom:4px" id="recentList"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LEADS SCREEN -->
+  <div class="screen" id="screen-leads">
+    <div class="searchbar-wrap">
+      <div class="searchbar">
+        <span class="searchbar-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar lead..." oninput="renderLeads()"/>
+      </div>
+    </div>
+    <div class="chips-row">
+      <div class="filter-chip active" onclick="setFilter('todos',this)">Todos</div>
+      <div class="filter-chip" onclick="setFilter('Ativo',this)">Ativos</div>
+      <div class="filter-chip" onclick="setFilter('Perdido',this)">Perdidos</div>
+      <div class="filter-chip" onclick="setFilter('Fechado',this)">Fechados</div>
+      <div class="filter-chip" onclick="setFilter('sem',this)">Sem status</div>
+    </div>
+    <div class="leads-list" id="leadsList"></div>
+  </div>
+
+  <!-- BOTTOM NAVBAR -->
+  <div class="navbar">
+    <div class="nav-item active" id="nav-dashboard" onclick="showTab('dashboard')">
+      <div class="nav-indicator"></div>
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">Dashboard</div>
+    </div>
+    <div class="nav-item" id="nav-leads" onclick="showTab('leads')">
+      <div class="nav-indicator"></div>
+      <div class="nav-icon">👥</div>
+      <div class="nav-label">Leads</div>
+      <div class="nav-badge" id="totalBadge">0</div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- FAB -->
+<button class="fab hidden" id="fabBtn" onclick="openModal()">
+  <span style="font-size:20px">＋</span> Novo Lead
+</button>
+
+<!-- BOTTOM SHEET: FORM -->
+<div class="overlay" id="formOverlay" onclick="handleOverlayClick(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title" id="modalTitle">Novo Lead</div>
+      <button class="sheet-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <input type="hidden" id="editId"/>
+
+      <div class="field">
+        <div class="field-lbl">Nome do lead *</div>
+        <input class="field-input" type="text" id="fNome" placeholder="Ex: João Silva"/>
+      </div>
+      <div class="field">
+        <div class="field-lbl">Data de chegada</div>
+        <input class="field-input" type="date" id="fChegada"/>
+      </div>
+      <div class="field">
+        <div class="field-lbl">Data do 1º contato</div>
+        <input class="field-input" type="date" id="fContato1"/>
+      </div>
+      <div class="field">
+        <div class="field-lbl">Data do 2º contato</div>
+        <input class="field-input" type="date" id="fContato2"/>
+      </div>
+
+      <div class="field">
+        <div class="field-lbl">Status</div>
+        <div class="status-row">
+          <div class="status-opt">
+            <input type="radio" name="status" id="sAtivo" value="Ativo" onchange="onStatusChange()"/>
+            <label for="sAtivo" class="l-ativo"><span class="s-icon">✅</span>Ativo</label>
+          </div>
+          <div class="status-opt">
+            <input type="radio" name="status" id="sPerdido" value="Perdido" onchange="onStatusChange()"/>
+            <label for="sPerdido" class="l-perdido"><span class="s-icon">❌</span>Perdido</label>
+          </div>
+          <div class="status-opt">
+            <input type="radio" name="status" id="sFechado" value="Fechado" onchange="onStatusChange()"/>
+            <label for="sFechado" class="l-fechado"><span class="s-icon">🤝</span>Fechado</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="motivo-section" id="motivoSection">
+        <div class="field-lbl">Motivo de perda</div>
+        <div class="motivo-list">
+          <div class="motivo-item" onclick="selectMotivo('Nunca respondeu',this)"><div class="motivo-radio"></div><div class="motivo-lbl">Nunca respondeu</div></div>
+          <div class="motivo-item" onclick="selectMotivo('Parou de responder',this)"><div class="motivo-radio"></div><div class="motivo-lbl">Parou de responder</div></div>
+          <div class="motivo-item" onclick="selectMotivo('Preço',this)"><div class="motivo-radio"></div><div class="motivo-lbl">Preço</div></div>
+          <div class="motivo-item" onclick="selectMotivo('Sem perfil',this)"><div class="motivo-radio"></div><div class="motivo-lbl">Sem perfil</div></div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="saveLead()">Salvar Lead</button>
+      <button class="btn-danger" id="btnDelete" style="display:none" onclick="confirmDelete()">🗑 Excluir lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="dialog-overlay" id="confirmOverlay">
+  <div class="dialog">
+    <h3>Excluir lead?</h3>
+    <p>Esta ação é permanente e não poderá ser desfeita.</p>
+    <div class="dialog-btns">
+      <button class="btn-outline" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-del" onclick="deleteLead()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- SNACKBAR -->
+<div class="snackbar" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+let leads = JSON.parse(localStorage.getItem('leads_rita_v1') || '[]');
+let currentFilter = 'todos';
+let barPeriod = 12;
+let chartPie = null, chartBar = null;
+let currentEditId = null, currentMotivo = '';
+
+function genId()    { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function today()    { return new Date().toISOString().slice(0,10); }
+function fmtDate(d) { if (!d) return '—'; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; }
+function save()     { localStorage.setItem('leads_rita_v1', JSON.stringify(leads)); }
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(tab) {
+  ['dashboard','leads'].forEach((t,i) => {
+    document.getElementById(`screen-${t}`).classList.toggle('active', t===tab);
+    document.getElementById(`nav-${t}`).classList.toggle('active', t===tab);
+  });
+  document.getElementById('fabBtn').classList.toggle('hidden', tab!=='leads');
+  if (tab==='dashboard') renderDashboard();
+  if (tab==='leads') renderLeads();
+}
+function switchToLeads() { showTab('leads'); }
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const total    = leads.length;
+  const ativos   = leads.filter(l=>l.status==='Ativo').length;
+  const perdidos = leads.filter(l=>l.status==='Perdido').length;
+  const fechados = leads.filter(l=>l.status==='Fechado').length;
+  document.getElementById('kpi-total').textContent    = total;
+  document.getElementById('kpi-ativos').textContent   = ativos;
+  document.getElementById('kpi-perdidos').textContent = perdidos;
+  document.getElementById('kpi-fechados').textContent = fechados;
+  document.getElementById('totalBadge').textContent   = total;
+  document.getElementById('kpi-taxa-perda').textContent      = total>0 ? Math.round(perdidos/total*100)+'%' : '0%';
+  document.getElementById('kpi-taxa-fechamento').textContent = total>0 ? Math.round(fechados/total*100)+'%' : '0%';
+  renderBarChart(); renderPie(); renderRecent();
+}
+
+function setPeriod(p, el) {
+  barPeriod = p;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderBarChart();
+}
+
+function renderBarChart() {
+  const withDate  = leads.filter(l=>l.chegada);
+  const barEmpty  = document.getElementById('barEmpty');
+  const barCanvas = document.getElementById('barChart');
+  if (!withDate.length) {
+    barEmpty.style.display=''; barCanvas.style.display='none';
+    if (chartBar){chartBar.destroy();chartBar=null;} return;
+  }
+  barEmpty.style.display='none'; barCanvas.style.display='';
+
+  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const now   = new Date();
+  const slots = barPeriod;
+  const labels=[], data=[];
+  for(let i=slots-1; i>=0; i--){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const k = d.toISOString().slice(0,7);
+    labels.push(meses[d.getMonth()]+'/'+String(d.getFullYear()).slice(2));
+    data.push(withDate.filter(l=>l.chegada.slice(0,7)===k).length);
+  }
+
+  if (chartBar) chartBar.destroy();
+  chartBar=new Chart(barCanvas.getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:'rgba(26,115,232,0.14)',borderColor:'#1a73e8',borderWidth:2,borderRadius:6,borderSkipped:false,barPercentage:0.5,categoryPercentage:0.7}]},
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw} lead${c.raw!==1?'s':''}`}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10,family:"'Roboto Mono',monospace"},color:'#9aa0a6',maxRotation:0}},
+        y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10},color:'#9aa0a6'},grid:{color:'rgba(0,0,0,0.04)'}}
+      }
+    }
+  });
+}
+
+function renderPie() {
+  const motivos=['Nunca respondeu','Parou de responder','Preço','Sem perfil'];
+  const colors=['#1a73e8','#d93025','#e37400','#1e8e3e'];
+  const counts=motivos.map(m=>leads.filter(l=>l.motivo===m).length);
+  const total=counts.reduce((a,b)=>a+b,0);
+  if (chartPie) chartPie.destroy();
+  if (!total){
+    document.getElementById('pieChart').style.display='none';
+    document.getElementById('chartLegend').innerHTML='<span style="color:var(--md-text3);font-size:13px">Nenhum lead perdido ainda</span>';
+    return;
+  }
+  document.getElementById('pieChart').style.display='';
+  chartPie=new Chart(document.getElementById('pieChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:motivos,datasets:[{data:counts,backgroundColor:colors,borderWidth:0,hoverOffset:8}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw} (${Math.round(c.raw/total*100)}%)`}}}}
+  });
+  document.getElementById('chartLegend').innerHTML=motivos.map((m,i)=>counts[i]>0?`<div class="legend-item"><div class="legend-dot" style="background:${colors[i]}"></div>${m}: <b style="color:var(--md-text)">${counts[i]}</b></div>`:'').join('');
+}
+
+function renderRecent() {
+  const sorted=[...leads].sort((a,b)=>(b.chegada||'').localeCompare(a.chegada||'')).slice(0,5);
+  const el=document.getElementById('recentList');
+  if (!sorted.length){el.innerHTML='<p style="padding:16px 0;color:var(--md-text3);font-size:13px;text-align:center">Nenhum lead cadastrado</p>';return;}
+  el.innerHTML=sorted.map(l=>`
+    <div class="recent-row" onclick="openEdit('${l.id}')">
+      <div>
+        <div class="recent-name">${l.nome}</div>
+        <div class="recent-date">${fmtDate(l.chegada)}</div>
+      </div>
+      ${chipHtml(l.status)}
+    </div>`).join('');
+}
+
+function chipHtml(s){
+  const m={'Ativo':'ativo','Perdido':'perdido','Fechado':'fechado'};
+  return `<span class="chip ${m[s]||'sem'}">${s||'Sem status'}</span>`;
+}
+
+// ── LEADS LIST ────────────────────────────────────────────────────────────────
+function setFilter(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.filter-chip').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderLeads();
+}
+
+function renderLeads() {
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  let f=leads.filter(l=>l.nome.toLowerCase().includes(q));
+  if (currentFilter==='sem') f=f.filter(l=>!l.status);
+  else if (currentFilter!=='todos') f=f.filter(l=>l.status===currentFilter);
+  f.sort((a,b)=>(b.chegada||'').localeCompare(a.chegada||''));
+  document.getElementById('totalBadge').textContent=leads.length;
+  const el=document.getElementById('leadsList');
+  if (!f.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nenhum lead encontrado</div><div class="empty-sub">Tente outro filtro ou adicione um novo lead</div></div>`;
+    return;
+  }
+  el.innerHTML=f.map(l=>`
+    <div class="lead-card ${l.status?l.status.toLowerCase():'sem-status'}" onclick="openEdit('${l.id}')">
+      <div class="lead-card-bar"></div>
+      <div class="lead-card-inner">
+        <div class="lead-top">
+          <div>
+            <div class="lead-name">${l.nome}</div>
+            <div class="lead-date">Chegada: ${fmtDate(l.chegada)}</div>
+          </div>
+          ${chipHtml(l.status)}
+        </div>
+        <div class="lead-contacts">
+          <div class="lead-contact-item">1º contato: <b>${fmtDate(l.contato1)}</b></div>
+          ${l.contato2?`<div class="lead-contact-item">2º contato: <b>${fmtDate(l.contato2)}</b></div>`:''}
+        </div>
+        ${l.motivo?`<div class="motivo-chip">⚠ ${l.motivo}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(){
+  currentEditId=null; currentMotivo='';
+  document.getElementById('editId').value='';
+  document.getElementById('modalTitle').textContent='Novo Lead';
+  document.getElementById('fNome').value='';
+  document.getElementById('fChegada').value=today();
+  document.getElementById('fContato1').value='';
+  document.getElementById('fContato2').value='';
+  document.querySelectorAll('input[name=status]').forEach(r=>r.checked=false);
+  document.getElementById('motivoSection').classList.remove('visible');
+  document.querySelectorAll('.motivo-item').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('btnDelete').style.display='none';
+  document.getElementById('formOverlay').classList.add('open');
+}
+
+function openEdit(id){
+  const l=leads.find(x=>x.id===id); if(!l)return;
+  currentEditId=id; currentMotivo=l.motivo||'';
+  document.getElementById('modalTitle').textContent='Editar Lead';
+  document.getElementById('editId').value=id;
+  document.getElementById('fNome').value=l.nome;
+  document.getElementById('fChegada').value=l.chegada||'';
+  document.getElementById('fContato1').value=l.contato1||'';
+  document.getElementById('fContato2').value=l.contato2||'';
+  document.querySelectorAll('input[name=status]').forEach(r=>r.checked=r.value===l.status);
+  onStatusChange();
+  if(l.motivo) document.querySelectorAll('.motivo-item').forEach(o=>o.classList.toggle('selected',o.querySelector('.motivo-lbl').textContent===l.motivo));
+  document.getElementById('btnDelete').style.display='';
+  document.getElementById('formOverlay').classList.add('open');
+}
+
+function closeModal(){ document.getElementById('formOverlay').classList.remove('open'); }
+function handleOverlayClick(e){ if(e.target===document.getElementById('formOverlay')) closeModal(); }
+
+function onStatusChange(){
+  const s=document.querySelector('input[name=status]:checked')?.value;
+  if(s==='Perdido') document.getElementById('motivoSection').classList.add('visible');
+  else{ document.getElementById('motivoSection').classList.remove('visible'); currentMotivo=''; document.querySelectorAll('.motivo-item').forEach(o=>o.classList.remove('selected')); }
+}
+
+function selectMotivo(m,el){
+  currentMotivo=m;
+  document.querySelectorAll('.motivo-item').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function saveLead(){
+  const nome=document.getElementById('fNome').value.trim();
+  if(!nome){ toast('⚠️ Informe o nome do lead'); return; }
+  const status=document.querySelector('input[name=status]:checked')?.value||'';
+  const data={nome, chegada:document.getElementById('fChegada').value, contato1:document.getElementById('fContato1').value, contato2:document.getElementById('fContato2').value, status, motivo:status==='Perdido'?currentMotivo:''};
+  if(currentEditId){ const idx=leads.findIndex(l=>l.id===currentEditId); leads[idx]={...leads[idx],...data}; toast('✅ Lead atualizado!'); }
+  else{ leads.unshift({id:genId(),criadoEm:today(),...data}); toast('✅ Lead cadastrado!'); }
+  save(); closeModal(); renderLeads(); renderDashboard();
+}
+
+function confirmDelete(){ document.getElementById('confirmOverlay').classList.add('open'); }
+function closeConfirm(){  document.getElementById('confirmOverlay').classList.remove('open'); }
+function deleteLead(){
+  leads=leads.filter(l=>l.id!==currentEditId);
+  save(); closeConfirm(); closeModal(); renderLeads(); renderDashboard();
+  toast('🗑 Lead removido');
+}
+
+function exportCSV(){
+  if(!leads.length){ toast('⚠️ Nenhum lead para exportar'); return; }
+  const header='Nome,Chegada,1º Contato,2º Contato,Status,Motivo de Perda';
+  const rows=leads.map(l=>[l.nome,fmtDate(l.chegada),fmtDate(l.contato1),fmtDate(l.contato2),l.status||'',l.motivo||''].map(v=>`"${v}"`).join(','));
+  const blob=new Blob(['\ufeff'+[header,...rows].join('\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='leads_rita.csv'; a.click();
+  URL.revokeObjectURL(url);
+  toast('📤 CSV exportado!');
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+renderDashboard();
+</script>
+</body>
+</html>
